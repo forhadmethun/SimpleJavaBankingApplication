@@ -34,8 +34,15 @@ public class AccountServiceImplTest {
 
     @Test
     public void sendMoneyTest() throws BankTransactionException{
-        Account account1 = new Account(0L, "1001", new BigDecimal(50000));
-        Account account2 = new Account(0L, "2002", new BigDecimal(2000));
+        Account account1 = Account.builder()
+                .accountNumber("1001")
+                .currentBalance(new BigDecimal(50000))
+                .build();
+        Account account2 = Account.builder()
+                .accountNumber("2002")
+                .currentBalance(new BigDecimal(2000))
+                .build();
+
         accountService.save(account1);
         accountService.save(account2);
 
@@ -48,21 +55,33 @@ public class AccountServiceImplTest {
         Account fromAccount = accountService.findByAccountNumber(account1.getAccountNumber());
         Account toAccount = accountService.findByAccountNumber(account2.getAccountNumber());
         accountService.sendMoney(fromAccount,toAccount,transferBalanceRequest);
-        assertThat(accountService.findByAccountNumber(account1.getAccountNumber())
-                .getCurrentBalance())
-                .isEqualTo(new BigDecimal(47000));
-        assertThat(accountService.findByAccountNumber(account2.getAccountNumber())
-                .getCurrentBalance())
-                .isEqualTo(new BigDecimal(5000));
+        assertThat(
+                accountService
+                        .findByAccountNumber(account1.getAccountNumber())
+                        .getCurrentBalance())
+                        .isEqualTo(new BigDecimal(47000));
+        assertThat(
+                accountService
+                        .findByAccountNumber(account2.getAccountNumber())
+                        .getCurrentBalance())
+                        .isEqualTo(new BigDecimal(5000));
 
     }
 
     @Test
     public void getStatement() throws BankTransactionException {
-        Account account1 = new Account(0L, "1001", new BigDecimal(50000));
-        Account account2 = new Account(0L, "2002", new BigDecimal(2000));
+        Account account1 = Account.builder()
+                .accountNumber("1001")
+                .currentBalance(new BigDecimal(50000))
+                .build();
+        Account account2 = Account.builder()
+                .accountNumber("2002")
+                .currentBalance(new BigDecimal(2000))
+                .build();
+
         accountService.save(account1);
         accountService.save(account2);
+
         TransferBalanceRequest transferBalanceRequest =
                 new TransferBalanceRequest(
                         account1.getAccountNumber(),
@@ -83,7 +102,6 @@ public class AccountServiceImplTest {
 
         assertThat(accountService.getStatement(account2.getAccountNumber())
                 .getCurrentBalance()).isEqualTo(new BigDecimal(8000));
-
 
         assertThat(accountService.getStatement(account1.getAccountNumber())
                 .getTransactionHistory().size()).isEqualTo(2);

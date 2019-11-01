@@ -42,8 +42,9 @@ public class AccountServiceImpl implements AccountService {
 
         accountRepository.save(account);
         return AccountMapper.toAccountDto(
-                accountRepository.findByAccountNumberEquals(account.getAccountNumber()
-                )
+                    accountRepository.findByAccountNumberEquals(
+                            account.getAccountNumber()
+                    )
         );
     }
 
@@ -57,7 +58,6 @@ public class AccountServiceImpl implements AccountService {
     public Account findByAccountNumber(String accountNumber) {
         return accountRepository.findByAccountNumberEquals(accountNumber);
     }
-
 
     @Transactional(propagation = Propagation.MANDATORY)
     public void withdrawAmount(Account account, BigDecimal amount)
@@ -76,10 +76,8 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
     }
 
-
     @Override
     @Transactional(
-//            propagation = Propagation.REQUIRES_NEW,
             rollbackFor = BankTransactionException.class
     )
     public TransactionDto sendMoney(
@@ -88,25 +86,52 @@ public class AccountServiceImpl implements AccountService {
             TransferBalanceRequest transferBalanceRequest
     ) throws BankTransactionException {
         synchronized (this) {
-            checkValidityAndThrowExceptionIfInvalidRequest(fromAccount, toAccount, transferBalanceRequest);
+            checkValidityAndThrowExceptionIfInvalidRequest(
+                    fromAccount,
+                    toAccount,
+                    transferBalanceRequest
+            );
             withdrawAmount(fromAccount, transferBalanceRequest.getAmount());
             depositAmount(toAccount, transferBalanceRequest.getAmount());
-            Transaction transaction = transactionRepository.save(
-                    new Transaction(
-                            0L,
-                            transferBalanceRequest.getFromAccountNumber(),
-                            transferBalanceRequest.getToAccountNumber(),
-                            transferBalanceRequest.getAmount(),
-                            new Timestamp(System.currentTimeMillis())
-                    )
+            Transaction transaction = transactBalance(
+                    fromAccount,
+                    toAccount,
+                    transferBalanceRequest
             );
             return TransactionMapper.toTransactionDto(transaction);
         }
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Transaction transactBalance(
+            Account fromAccount,
+            Account toAccount,
+            TransferBalanceRequest transferBalanceRequest)
+            throws BankTransactionException {
+        Transaction withdrawTranscation = Transaction.builder()
+                .account(fromAccount)
+                .transactionAmount(transferBalanceRequest.getAmount().multiply(new BigDecimal(-1)))
+                .transactionDateTime(new Timestamp(System.currentTimeMillis()))
+                .description("Credited to account no " + transferBalanceRequest.getToAccountNumber())
+                .build();
+        withdrawTranscation = transactionRepository.save(withdrawTranscation);
+        withdrawTranscation.setTransactionId(withdrawTranscation.getId());
+        transactionRepository.save(withdrawTranscation);
+        Transaction depositTransaction = Transaction.builder()
+                .account(toAccount)
+                .transactionAmount(transferBalanceRequest.getAmount())
+                .transactionDateTime(new Timestamp(System.currentTimeMillis()))
+                .transactionId(withdrawTranscation.getId())
+                .description("Credited from account no " + transferBalanceRequest.getFromAccountNumber())
+                .build();
+        transactionRepository.save(depositTransaction);
+        return withdrawTranscation;
+    }
+
 
     @Override
-    public AccountStatement getStatement(String accountNumber) throws BankTransactionException {
+    public AccountStatement getStatement(String accountNumber)
+            throws BankTransactionException {
         Account account = accountRepository.findByAccountNumberEquals(accountNumber);
         if (account == null) {
             throw new BankTransactionException("Account not found " + accountNumber);
@@ -114,19 +139,17 @@ public class AccountServiceImpl implements AccountService {
         return new AccountStatement(
                 account.getCurrentBalance(),
                 TransactionMapper.toTransactionDtoList(
-                        transactionRepository.findByDebitAccountNumberEqualsOrCreditAccountNumberEquals(
-                                accountNumber,
-                                accountNumber
-                        )
+                        account.getTransactionList()
                 )
         );
     }
 
 
-    private void checkValidityAndThrowExceptionIfInvalidRequest(Account fromAccount,
-                                                                Account toAccount,
-                                                                TransferBalanceRequest transferBalanceRequest)
-            throws BankTransactionException {
+    private void checkValidityAndThrowExceptionIfInvalidRequest(
+            Account fromAccount,
+            Account toAccount,
+            TransferBalanceRequest transferBalanceRequest
+    ) throws BankTransactionException {
         if (checkIfNegativeTransferAmountProvided(transferBalanceRequest.getAmount())) {
             throw new BankTransactionException("Balance Transfer amount should be positive.");
         }
@@ -152,11 +175,15 @@ public class AccountServiceImpl implements AccountService {
         return false;
     }
 
-    public void checkValidityAndThrowExceptionIfInsufficientBalance(BigDecimal newBalance, Account account)
+    public void checkValidityAndThrowExceptionIfInsufficientBalance(
+            BigDecimal newBalance, Account account)
             throws BankTransactionException {
         if (newBalance.compareTo(BigDecimal.ZERO) == -1) {
             throw new BankTransactionException(
-                    "The money in the account number '" + account.getAccountNumber() + "' is not enough (current balance: " + account.getCurrentBalance() + ")");
+                    "The balance in the account number '" +
+                     account.getAccountNumber() +
+                     "' is not enough (current balance: " +
+                     account.getCurrentBalance() + ")");
         }
     }
 }

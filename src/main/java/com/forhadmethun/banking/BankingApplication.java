@@ -30,9 +30,9 @@ public class BankingApplication {
 		public void run(String... args) throws Exception {
 			List<Account> accounts = new ArrayList<Account>();
 
-			accounts.add(new Account(0L,"10011",new BigDecimal(1000)));
-			accounts.add(new Account(0L,"10012",new BigDecimal(1000)));
-			accounts.add(new Account(0L,"10013",new BigDecimal(1000)));
+			accounts.add(Account.builder().accountNumber("10011").currentBalance(new BigDecimal("1000")).build());
+			accounts.add(Account.builder().accountNumber("10012").currentBalance(new BigDecimal("1000")).build());
+			accounts.add(Account.builder().accountNumber("10013").currentBalance(new BigDecimal("1000")).build());
 
 			accountRepository.save(accounts.get(0));
 			accountRepository.save(accounts.get(1));

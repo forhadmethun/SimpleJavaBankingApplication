@@ -25,7 +25,7 @@ public class DocumentationConfig {
 
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Documentation of Simple Banking Application REST API.")
-                .description("FSimple Banking Application REST API")
+                .description("Simple Banking Application REST API")
                 .contact(new Contact("Md. Forhad Hossain", "https://sites.google.com/site/forhadmethun/", "forhadmethun@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

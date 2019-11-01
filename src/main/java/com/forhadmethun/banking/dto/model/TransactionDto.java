@@ -12,9 +12,7 @@ public class TransactionDto {
 
     private Long transactionId;
 
-    private String debitAccountNumber;
-
-    private String creditAccountNumber;
+    private String description;
 
     private BigDecimal transactionAmount;
 

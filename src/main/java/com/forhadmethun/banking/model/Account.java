@@ -2,16 +2,15 @@ package com.forhadmethun.banking.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
+@Getter
+@Setter
 @Entity
 @Table(name = "account")
 public class Account {
@@ -20,7 +19,12 @@ public class Account {
     @GeneratedValue
     private Long accountId;
 
+    @Column(unique=true)
     String accountNumber;
 
     BigDecimal currentBalance;
+
+    @OneToMany(mappedBy = "account")
+    private List<Transaction> transactionList;
+
 }

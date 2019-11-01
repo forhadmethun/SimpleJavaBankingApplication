@@ -1,7 +1,6 @@
 package com.forhadmethun.banking.dto.mapper;
 
 import com.forhadmethun.banking.dto.model.TransactionDto;
-import com.forhadmethun.banking.model.Account;
 import com.forhadmethun.banking.model.Transaction;
 
 import java.util.List;
@@ -11,8 +10,7 @@ public class TransactionMapper {
     public static TransactionDto toTransactionDto(Transaction transaction){
         return TransactionDto.builder()
                 .transactionId(transaction.getTransactionId())
-                .debitAccountNumber(transaction.getDebitAccountNumber())
-                .creditAccountNumber(transaction.getCreditAccountNumber())
+                .description(transaction.getDescription())
                 .transactionAmount(transaction.getTransactionAmount())
                 .transactionDateTime(transaction.getTransactionDateTime())
                 .build();
