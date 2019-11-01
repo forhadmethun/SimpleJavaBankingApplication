@@ -33,13 +33,7 @@ public class AccountServiceImpl implements AccountService {
 
     public AccountDto save(Account account)
             throws BankTransactionException {
-        Account existingAccount = accountRepository.findByAccountNumberEquals(
-                account.getAccountNumber()
-        );
-        if (existingAccount != null) {
-            throw new BankTransactionException("Account already exists.");
-        }
-
+        checkValidityAndThrowExceptionIfInvalidAccountCreateRequest(account);
         accountRepository.save(account);
         return AccountMapper.toAccountDto(
                     accountRepository.findByAccountNumberEquals(
@@ -86,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
             TransferBalanceRequest transferBalanceRequest
     ) throws BankTransactionException {
         synchronized (this) {
-            checkValidityAndThrowExceptionIfInvalidRequest(
+            checkValidityAndThrowExceptionIfInvalidSendMoneyRequest(
                     fromAccount,
                     toAccount,
                     transferBalanceRequest
@@ -145,8 +139,21 @@ public class AccountServiceImpl implements AccountService {
         );
     }
 
+    private void checkValidityAndThrowExceptionIfInvalidAccountCreateRequest(Account account)
+            throws BankTransactionException {
+        Account existingAccount = accountRepository.findByAccountNumberEquals(
+                account.getAccountNumber()
+        );
+        if (existingAccount != null) {
+            throw new BankTransactionException("Account already exists.");
+        }
+        if(account.getCurrentBalance().compareTo(BigDecimal.ZERO) == -1){
+            throw new BankTransactionException("Can not create account with negative balance.");
+        }
 
-    private void checkValidityAndThrowExceptionIfInvalidRequest(
+    }
+
+    private void checkValidityAndThrowExceptionIfInvalidSendMoneyRequest(
             Account fromAccount,
             Account toAccount,
             TransferBalanceRequest transferBalanceRequest
