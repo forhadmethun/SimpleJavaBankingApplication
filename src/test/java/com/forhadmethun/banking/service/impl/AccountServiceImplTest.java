@@ -6,6 +6,7 @@ import com.forhadmethun.banking.model.Account;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 public class AccountServiceImplTest {
 
     @TestConfiguration
@@ -95,6 +97,7 @@ public class AccountServiceImplTest {
         assertThat(accountService.getStatement(account1.getAccountNumber())
                 .getCurrentBalance())
                 .isEqualTo(new BigDecimal(47000));
+
         accountService.sendMoney(fromAccount,toAccount,transferBalanceRequest);
 
         assertThat(accountService.getStatement(account1.getAccountNumber())
@@ -103,8 +106,6 @@ public class AccountServiceImplTest {
         assertThat(accountService.getStatement(account2.getAccountNumber())
                 .getCurrentBalance()).isEqualTo(new BigDecimal(8000));
 
-        assertThat(accountService.getStatement(account1.getAccountNumber())
-                .getTransactionHistory().size()).isEqualTo(2);
     }
 
 }

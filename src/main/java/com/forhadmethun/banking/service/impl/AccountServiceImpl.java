@@ -138,6 +138,7 @@ public class AccountServiceImpl implements AccountService {
         }
         return new AccountStatement(
                 account.getCurrentBalance(),
+                account.getTransactionList() == null ? null :
                 TransactionMapper.toTransactionDtoList(
                         account.getTransactionList()
                 )
