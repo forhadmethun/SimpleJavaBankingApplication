@@ -1,6 +1,7 @@
 package com.forhadmethun.banking.service.impl;
 
 import com.forhadmethun.banking.controller.request.TransferBalanceRequest;
+import com.forhadmethun.banking.dto.mapper.AccountMapper;
 import com.forhadmethun.banking.exception.BankTransactionException;
 import com.forhadmethun.banking.model.Account;
 import org.junit.Test;
@@ -45,8 +46,8 @@ public class AccountServiceImplTest {
                 .currentBalance(new BigDecimal(2000))
                 .build();
 
-        accountService.save(account1);
-        accountService.save(account2);
+        accountService.save(AccountMapper.toAccountDto(account1));
+        accountService.save(AccountMapper.toAccountDto(account2));
 
         TransferBalanceRequest transferBalanceRequest =
                 new TransferBalanceRequest(
@@ -81,8 +82,8 @@ public class AccountServiceImplTest {
                 .currentBalance(new BigDecimal(2000))
                 .build();
 
-        accountService.save(account1);
-        accountService.save(account2);
+        accountService.save(AccountMapper.toAccountDto(account1));
+        accountService.save(AccountMapper.toAccountDto(account2));
 
         TransferBalanceRequest transferBalanceRequest =
                 new TransferBalanceRequest(

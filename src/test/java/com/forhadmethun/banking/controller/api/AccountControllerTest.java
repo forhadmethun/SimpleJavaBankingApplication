@@ -92,7 +92,7 @@ public class AccountControllerTest {
                 .currentBalance(new BigDecimal(50000))
                 .build();
 
-        doReturn(AccountMapper.toAccountDto(account1)).when(accountService).save(account1);
+        doReturn(AccountMapper.toAccountDto(account1)).when(accountService).save(AccountMapper.toAccountDto(account1));
         doReturn(Arrays.asList(AccountMapper.toAccountDto(account1))).when(accountService).findAll();
 
         mockMvc.perform(
@@ -137,10 +137,10 @@ public class AccountControllerTest {
                 .description("Credited to account no " + transferBalanceRequest.getToAccountNumber())
                 .build();
 
-        doReturn(AccountMapper.toAccountDto(fromAccount)).when(accountService).save(fromAccount);
+        doReturn(AccountMapper.toAccountDto(fromAccount)).when(accountService).save(AccountMapper.toAccountDto(fromAccount));
         doReturn(fromAccount).when(accountService).findByAccountNumber(fromAccount.getAccountNumber());
 
-        doReturn(AccountMapper.toAccountDto(toAccount)).when(accountService).save(toAccount);
+        doReturn(AccountMapper.toAccountDto(toAccount)).when(accountService).save(AccountMapper.toAccountDto(toAccount));
         doReturn(toAccount).when(accountService).findByAccountNumber(toAccount.getAccountNumber());
 
         doReturn(TransactionMapper.toTransactionDto(withdrawTranscation)).when(accountService).sendMoney(fromAccount,toAccount,transferBalanceRequest);
@@ -164,7 +164,7 @@ public class AccountControllerTest {
                 .currentBalance(new BigDecimal(50000))
                 .build();
 
-        doReturn(AccountMapper.toAccountDto(account1)).when(accountService).save(account1);
+        doReturn(AccountMapper.toAccountDto(account1)).when(accountService).save(AccountMapper.toAccountDto(account1));
         doReturn(account1).when(accountService).findByAccountNumber(account1.getAccountNumber());
         doReturn(new AccountStatement(account1.getCurrentBalance(), null)).when(accountService).getStatement(account1.getAccountNumber());
 

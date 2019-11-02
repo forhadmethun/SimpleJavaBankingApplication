@@ -2,6 +2,8 @@ package com.forhadmethun.banking.controller.api;
 
 import com.forhadmethun.banking.controller.request.AccountStatementRequest;
 import com.forhadmethun.banking.controller.request.TransferBalanceRequest;
+import com.forhadmethun.banking.dto.mapper.AccountMapper;
+import com.forhadmethun.banking.dto.model.AccountDto;
 import com.forhadmethun.banking.dto.response.Response;
 import com.forhadmethun.banking.model.Account;
 import com.forhadmethun.banking.exception.BankTransactionException;
@@ -17,7 +19,7 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping("/create")
-    public Response<Object> create(@RequestBody Account account)
+    public Response<Object> create(@RequestBody AccountDto account)
             throws BankTransactionException {
         try {
             accountService.save(account);

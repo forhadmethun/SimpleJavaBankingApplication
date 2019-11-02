@@ -19,4 +19,12 @@ public class AccountMapper {
                 .map(account -> toAccountDto(account))
                 .collect(Collectors.toList());
     }
+
+    public static Account toAccount(AccountDto accountDto){
+        return Account.builder()
+                .accountNumber(accountDto.getAccountNumber())
+                .accountName(accountDto.getAccountName())
+                .currentBalance(accountDto.getCurrentBalance())
+                .build();
+    }
 }

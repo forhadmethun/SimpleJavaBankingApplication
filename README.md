@@ -13,7 +13,7 @@ Clone the github repository -
 git clone https://github.com/forhadmethun/SimpleJavaBankingApplication.git
 ```
 - Requirement
-    - JDK 1.8
+    - JDK 1.8 or higher
     - Maven
 
 To use PostgreSQL change the following file accordingly - 

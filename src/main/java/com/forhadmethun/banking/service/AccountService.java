@@ -15,7 +15,7 @@ public interface AccountService {
 
     Account findByAccountNumber(String accountNumber);
 
-    AccountDto save(Account account)
+    AccountDto save(AccountDto accountDto)
             throws BankTransactionException;
 
     TransactionDto sendMoney(

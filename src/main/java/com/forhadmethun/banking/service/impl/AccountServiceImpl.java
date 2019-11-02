@@ -32,8 +32,9 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public AccountDto save(Account account)
+    public AccountDto save(AccountDto accountDto)
             throws BankTransactionException {
+        Account account = AccountMapper.toAccount(accountDto);
         checkValidityAndThrowExceptionIfInvalidAccountCreateRequest(account);
         accountRepository.save(account);
         return AccountMapper.toAccountDto(
