@@ -11,7 +11,7 @@
 	<groupId>com.forhadmethun</groupId>
 	<artifactId>banking</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>banking</name>
 	<description>Java Banking Application</description>
 
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.18</version>
+			<version>1.18.10</version>
 			<scope>provided</scope>
 		</dependency>
 

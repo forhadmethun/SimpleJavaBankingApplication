@@ -24,7 +24,7 @@ pom.xml
 
 
 ## Running the server locally ##
-Firstly build the application. To build and package a Spring Boot app into a single executable war file with a Maven, the below command can be used. Run the command from the project folder which contains the pom.xml file.
+Firstly build the application. To build and package a Spring Boot app into a single executable jar file with a Maven, the below command can be used. Run the command from the project folder which contains the pom.xml file.
 
 ```
 maven package
@@ -35,10 +35,10 @@ or,
 mvn install
 ```
 
-To run the Spring Boot app from a command line in a Terminal window the following java -jar command can be used. This is provided your Spring Boot app was packaged as an executable war file.
+To run the Spring Boot app from a command line in a Terminal window the following java -jar command can be used. This is provided your Spring Boot app was packaged as an executable jar file.
 
 ```
-java -jar target/banking-0.0.1-SNAPSHOT.war
+java -jar target/banking-0.0.1-SNAPSHOT.jar
 ```
 
 Maven plugin can also be used to run the app. Use the below example to run Spring Boot app with Maven plugin :
