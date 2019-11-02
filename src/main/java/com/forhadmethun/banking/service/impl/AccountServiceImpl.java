@@ -8,6 +8,7 @@ import com.forhadmethun.banking.dto.model.AccountStatement;
 import com.forhadmethun.banking.dto.model.TransactionDto;
 
 import com.forhadmethun.banking.model.Account;
+import com.forhadmethun.banking.constants.Direction;
 import com.forhadmethun.banking.model.Transaction;
 import com.forhadmethun.banking.exception.BankTransactionException;
 import com.forhadmethun.banking.repository.AccountRepository;
@@ -104,8 +105,11 @@ public class AccountServiceImpl implements AccountService {
             throws BankTransactionException {
         Transaction withdrawTranscation = Transaction.builder()
                 .account(fromAccount)
-                .transactionAmount(transferBalanceRequest.getAmount().multiply(new BigDecimal(-1)))
+                .transactionAmount(transferBalanceRequest.getAmount())
                 .transactionDateTime(new Timestamp(System.currentTimeMillis()))
+                .senderAccountNumber(fromAccount.getAccountNumber())
+                .receiverAccountNumber(toAccount.getAccountNumber())
+                .direction(Direction.OUT)
                 .description("Credited to account no " + transferBalanceRequest.getToAccountNumber())
                 .build();
         withdrawTranscation = transactionRepository.save(withdrawTranscation);
@@ -116,6 +120,9 @@ public class AccountServiceImpl implements AccountService {
                 .transactionAmount(transferBalanceRequest.getAmount())
                 .transactionDateTime(new Timestamp(System.currentTimeMillis()))
                 .transactionId(withdrawTranscation.getId())
+                .senderAccountNumber(fromAccount.getAccountNumber())
+                .receiverAccountNumber(toAccount.getAccountNumber())
+                .direction(Direction.IN)
                 .description("Credited from account no " + transferBalanceRequest.getFromAccountNumber())
                 .build();
         transactionRepository.save(depositTransaction);

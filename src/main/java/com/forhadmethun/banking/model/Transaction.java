@@ -1,5 +1,6 @@
 package com.forhadmethun.banking.model;
 
+import com.forhadmethun.banking.constants.Direction;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,6 +26,12 @@ public class Transaction {
     private String description;
 
     private Timestamp transactionDateTime;
+
+    private String senderAccountNumber;
+
+    private String receiverAccountNumber;
+
+    private Direction direction;
 
     @ManyToOne
     @JoinColumn(name = "accountNumber")

@@ -13,6 +13,9 @@ public class TransactionMapper {
                 .description(transaction.getDescription())
                 .transactionAmount(transaction.getTransactionAmount())
                 .transactionDateTime(transaction.getTransactionDateTime())
+                .senderAccountNumber(transaction.getSenderAccountNumber())
+                .receiverAccountNumber(transaction.getReceiverAccountNumber())
+                .direction(transaction.getDirection())
                 .build();
     }
 

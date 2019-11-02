@@ -18,12 +18,12 @@ public class AccountController {
 
     @PostMapping("/create")
     public Response<Object> create(@RequestBody Account account)
-    throws BankTransactionException{
+            throws BankTransactionException {
         try {
-        accountService.save(account);
-        return Response.ok().setPayload(
-                accountService.findAll()
-        );
+            accountService.save(account);
+            return Response.ok().setPayload(
+                    accountService.findAll()
+            );
         } catch (BankTransactionException e) {
             return Response.exception().setErrors(e.getMessage());
         }
@@ -67,7 +67,7 @@ public class AccountController {
                             accountStatementRequest.getAccountNumber()
                     )
             );
-        }catch (BankTransactionException e) {
+        } catch (BankTransactionException e) {
             return Response.exception().setErrors(e.getMessage());
         }
     }

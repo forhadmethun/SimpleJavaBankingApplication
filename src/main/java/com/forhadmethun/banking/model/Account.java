@@ -24,6 +24,8 @@ public class Account {
 
     BigDecimal currentBalance;
 
+    String accountName;
+
     @OneToMany(mappedBy = "account")
     private List<Transaction> transactionList;
 

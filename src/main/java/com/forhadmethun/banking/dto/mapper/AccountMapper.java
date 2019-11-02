@@ -10,6 +10,7 @@ public class AccountMapper {
     public static AccountDto toAccountDto(Account account){
         return AccountDto.builder()
                 .accountNumber(account.getAccountNumber())
+                .accountName(account.getAccountName())
                 .currentBalance(account.getCurrentBalance())
                 .build();
     }
