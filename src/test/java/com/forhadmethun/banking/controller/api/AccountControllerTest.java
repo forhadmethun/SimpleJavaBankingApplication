@@ -3,18 +3,14 @@ package com.forhadmethun.banking.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.forhadmethun.banking.BankingApplication;
 import com.forhadmethun.banking.controller.request.AccountStatementRequest;
 import com.forhadmethun.banking.controller.request.TransferBalanceRequest;
 import com.forhadmethun.banking.dto.mapper.AccountMapper;
 import com.forhadmethun.banking.dto.mapper.TransactionMapper;
 import com.forhadmethun.banking.dto.model.AccountDto;
 import com.forhadmethun.banking.dto.model.AccountStatement;
-import com.forhadmethun.banking.exception.BankTransactionException;
 import com.forhadmethun.banking.model.Account;
 import com.forhadmethun.banking.model.Transaction;
-import com.forhadmethun.banking.repository.TransactionRepository;
-import com.forhadmethun.banking.service.AccountService;
 import com.forhadmethun.banking.service.impl.AccountServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,6 +38,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -81,12 +78,15 @@ public class AccountControllerTest {
 
         mockMvc.perform(get("/api/account/all"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"status\":\"OK\",\"payload\":[{\"accountNumber\":\"1001\",\"currentBalance\":50000,\"accountName\":null}]}"))
+
+        ;
     }
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
     @Test
-    public void createFAccountCheck() throws Exception {
+    public void createAccountCheck() throws Exception {
         Account account1 = Account.builder()
                 .accountNumber("1001")
                 .currentBalance(new BigDecimal(50000))
@@ -109,6 +109,8 @@ public class AccountControllerTest {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().json("{\"status\":\"OK\",\"payload\":[{\"accountNumber\":\"1001\",\"currentBalance\":50000,\"accountName\":null}]}"))
+
         ;
     }
 
@@ -132,7 +134,7 @@ public class AccountControllerTest {
 
         Transaction withdrawTranscation = Transaction.builder()
                 .account(fromAccount)
-                .transactionAmount(transferBalanceRequest.getAmount().multiply(new BigDecimal(-1)))
+                .transactionAmount(transferBalanceRequest.getAmount())
                 .transactionDateTime(new Timestamp(System.currentTimeMillis()))
                 .description("Credited to account no " + transferBalanceRequest.getToAccountNumber())
                 .build();
@@ -179,7 +181,9 @@ public class AccountControllerTest {
                                 )
                         ))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"status\":\"OK\",\"payload\":{\"currentBalance\":50000,\"transactionHistory\":null}}"))
+        ;
 
 
     }
