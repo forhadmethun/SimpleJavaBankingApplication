@@ -4,6 +4,11 @@ A sandbox Java banking application that can be used for:
 ● Sending money between two predefined accounts with a positive starting balance  
 ● Requesting account balance and list of transactions
 
+## Live Preview
+Go to the following link to get a live preview of API's- 
+
+http://ec2-3-83-201-125.compute-1.amazonaws.com:8080/swagger-ui.html#
+
 ## Technology Used
 Spring Boot, Maven, JPA, Hibernate, HSQLDB Database(or PostgreSQL) 
 
